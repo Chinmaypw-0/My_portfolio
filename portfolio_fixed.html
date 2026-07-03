@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinmay P Waghmare — Aspiring Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0E14;
+    --surface:#121826;
+    --surface-2:#161D2C;
+    --border:#232B3B;
+    --text:#E7ECF3;
+    --text-muted:#8B98AC;
+    --accent:#FFB454;
+    --accent-dim:#5C4A2B;
+    --signal:#4FD1C5;
+    --radius:10px;
+    --maxw:1080px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size:48px 48px;
+    pointer-events:none;
+    z-index:0;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;position:relative;z-index:1;}
+  h1,h2,h3{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.78rem;
+    color:var(--signal);
+    letter-spacing:0.04em;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{content:"//";color:var(--text-muted);}
+
+  /* NAV */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(10,14,20,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  nav.wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding-top:18px;padding-bottom:18px;
+  }
+  .logo{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.95rem;
+    font-weight:500;
+  }
+  .logo span{color:var(--accent);}
+  .navlinks{display:flex;gap:32px;list-style:none;}
+  .navlinks a{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.82rem;
+    color:var(--text-muted);
+    text-decoration:none;
+    transition:color .2s;
+    position:relative;
+    padding-bottom:3px;
+  }
+  .navlinks a::after{
+    content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;
+    background:var(--signal);
+    transform:scaleX(0);transform-origin:right;
+    transition:transform .3s ease;
+  }
+  .navlinks a:hover::after{transform:scaleX(1);transform-origin:left;}
+  .navlinks a:hover{color:var(--text);}
+  .navlinks a:focus-visible{outline:2px solid var(--signal);outline-offset:4px;}
+  .menu-btn{display:none;background:none;border:1px solid var(--border);color:var(--text);
+    width:38px;height:38px;border-radius:8px;font-size:1rem;cursor:pointer;}
+
+  /* HERO — text overlays the fixed full-bleed photo */
+  .hero{
+    min-height:100vh;
+    display:flex;flex-direction:column;justify-content:flex-end;
+    padding:120px 0 40px;
+  }
+  .hero-content{max-width:640px;}
+  .hero h1{
+    font-size:clamp(2.3rem,5vw,3.6rem);font-weight:700;line-height:1.08;margin-bottom:18px;
+    text-shadow:0 2px 24px rgba(0,0,0,0.45);
+  }
+  .hero h1 em{font-style:normal;color:var(--accent);}
+  .hero p.lede{font-size:1.08rem;color:#D3DAE5;max-width:52ch;margin-bottom:32px;text-shadow:0 2px 16px rgba(0,0,0,0.5);}
+  .cta-row{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.85rem;
+    padding:13px 22px;
+    border-radius:8px;
+    text-decoration:none;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    border:1px solid var(--border);
+  }
+  .btn-primary{background:var(--accent);color:#0A0E14;font-weight:500;border-color:var(--accent);}
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-ghost{color:var(--text);}
+  .btn-ghost:hover{border-color:var(--signal);color:var(--signal);transform:translateY(-2px);}
+  .btn:focus-visible{outline:2px solid var(--signal);outline-offset:3px;}
+
+  /* Fixed full-bleed hero photo — sits behind everything, blurs on scroll */
+  .fixed-photo{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100vh;
+    z-index:0;
+    overflow:hidden;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .fixed-photo img{
+    width:100%;height:100%;object-fit:contain;object-position:center center;
+    display:block;
+    filter:grayscale(20%) contrast(1.05) brightness(0.9) blur(0px);
+    transition:filter .05s linear;
+    will-change:filter;
+  }
+  .fixed-photo::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(10,14,20,0.15) 0%, rgba(10,14,20,0.35) 60%, var(--bg) 100%);
+    pointer-events:none;
+  }
+  .photo-tag{
+    position:absolute;bottom:28px;left:28px;z-index:2;
+    font-family:'JetBrains Mono',monospace;font-size:0.72rem;
+    color:var(--signal);
+    background:rgba(10,14,20,0.6);
+    padding:5px 10px;border-radius:6px;border:1px solid rgba(79,209,197,0.3);
+  }
+  /* wrapper for everything painted above the fixed photo */
+  .page{position:relative;z-index:1;}
+
+  /* signal waveform strip */
+  .signal-strip{width:100%;height:64px;margin-top:56px;}
+  .signal-strip svg{width:100%;height:100%;display:block;}
+  .signal-path{
+    fill:none;stroke:var(--signal);stroke-width:1.6;
+    stroke-dasharray:6 4000;
+    animation:draw 5.5s linear infinite;
+    opacity:0.85;
+  }
+  @keyframes draw{
+    0%{stroke-dashoffset:0;}
+    100%{stroke-dashoffset:-4000;}
+  }
+  @keyframes fadeUp{
+    from{opacity:0;transform:translateY(18px);}
+    to{opacity:1;transform:translateY(0);}
+  }
+  .hero-content > *{
+    opacity:0;
+    animation:fadeUp .7s cubic-bezier(.22,.61,.36,1) forwards;
+  }
+  .hero-content > .eyebrow{animation-delay:.1s;}
+  .hero-content > h1{animation-delay:.22s;}
+  .hero-content > .lede{animation-delay:.36s;}
+  .hero-content > .cta-row{animation-delay:.5s;}
+  .photo-tag{
+    opacity:0;
+    animation:fadeUp .7s cubic-bezier(.22,.61,.36,1) forwards;
+    animation-delay:.7s;
+  }
+  .photo-tag::before{
+    content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+    background:var(--signal);margin-right:6px;
+    animation:pulseDot 2s ease-in-out infinite;
+  }
+
+  section{padding:76px 0;border-top:1px solid var(--border);background:var(--bg);position:relative;}
+  section.hero{background:transparent;border-top:none;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:40px;flex-wrap:wrap;gap:12px;}
+  .section-head h2{font-size:clamp(1.5rem,3vw,2rem);}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:48px;}
+  .about-grid p{color:var(--text-muted);margin-bottom:16px;max-width:60ch;}
+  .lang-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:24px;
+  }
+  .lang-card h3{font-size:0.95rem;margin-bottom:16px;font-family:'JetBrains Mono',monospace;color:var(--text-muted);font-weight:500;}
+  .lang-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .pill{
+    font-family:'JetBrains Mono',monospace;font-size:0.78rem;
+    padding:6px 12px;border:1px solid var(--border);border-radius:20px;color:var(--text-muted);
+  }
+
+  /* SKILLS */
+  .skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .skill-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:26px;transition:border-color .2s, transform .2s;
+  }
+  .skill-card:hover{border-color:var(--signal);transform:translateY(-3px);}
+  .skill-card .tag{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--accent);margin-bottom:10px;display:block;}
+  .skill-card h3{font-size:1.1rem;margin-bottom:8px;}
+  .skill-card p{color:var(--text-muted);font-size:0.9rem;}
+
+  /* PROJECTS */
+  .project-list{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .project{
+    background:var(--surface);
+    padding:30px 28px;
+    display:grid;grid-template-columns:60px 1fr;gap:24px;
+    transition:background .25s ease;
+    border-left:2px solid transparent;
+  }
+  .project:hover{background:var(--surface-2);border-left-color:var(--signal);}
+  .project .idx{font-family:'JetBrains Mono',monospace;color:var(--text-muted);font-size:0.85rem;padding-top:4px;transition:color .25s ease;}
+  .project:hover .idx{color:var(--signal);}
+  .project h3{font-size:1.2rem;margin-bottom:8px;transition:transform .25s ease;}
+  .project:hover h3{transform:translateX(4px);}
+  .project p{color:var(--text-muted);font-size:0.95rem;max-width:70ch;margin-bottom:12px;}
+  .stack-row{display:flex;flex-wrap:wrap;gap:8px;}
+
+  /* EDUCATION timeline */
+  .timeline{position:relative;padding-left:32px;}
+  .timeline::before{content:"";position:absolute;left:5px;top:6px;bottom:6px;width:1px;background:var(--border);}
+  .tl-item{position:relative;padding-bottom:36px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:"";position:absolute;left:-32px;top:5px;width:11px;height:11px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--signal);
+  }
+  .tl-item.active::before{animation:pulseDot 2s ease-in-out infinite;}
+  .tl-item .status{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--accent);margin-bottom:6px;display:inline-block;}
+  .tl-item h3{font-size:1.1rem;margin-bottom:4px;}
+  .tl-item p{color:var(--text-muted);font-size:0.92rem;}
+
+  /* CERTS */
+  .cert-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .cert-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:22px;display:flex;flex-direction:column;gap:10px;
+  }
+  .cert-card a{color:var(--signal);font-family:'JetBrains Mono',monospace;font-size:0.82rem;text-decoration:none;word-break:break-all;}
+  .cert-card a:hover{text-decoration:underline;}
+
+  /* CONTACT */
+  .contact-box{
+    background:var(--surface);border:1px solid var(--border);border-radius:16px;
+    padding:52px;text-align:center;
+  }
+  .contact-box h2{font-size:clamp(1.6rem,4vw,2.3rem);margin-bottom:14px;}
+  .contact-box p{color:var(--text-muted);margin-bottom:30px;}
+  .contact-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+
+  footer{padding:36px 0 60px;text-align:center;background:var(--bg);position:relative;z-index:1;}
+  footer p{color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:0.78rem;}
+
+  @keyframes pulseDot{
+    0%,100%{box-shadow:0 0 0 0 rgba(79,209,197,0.55);}
+    50%{box-shadow:0 0 0 5px rgba(79,209,197,0);}
+  }
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  @media (max-width:820px){
+    .about-grid{grid-template-columns:1fr;}
+    .hero{min-height:88vh;padding:100px 0 30px;}
+    .skills-grid{grid-template-columns:1fr 1fr;}
+    .cert-grid{grid-template-columns:1fr;}
+    .navlinks{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);
+      flex-direction:column;padding:20px 28px;border-bottom:1px solid var(--border);gap:18px;}
+    .navlinks.open{display:flex;}
+    .menu-btn{display:block;}
+    .contact-box{padding:32px 20px;}
+  }
+  @media (max-width:560px){
+    .skills-grid{grid-template-columns:1fr;}
+    .project{grid-template-columns:1fr;}
+    .project .idx{display:none;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .signal-path{animation:none;stroke-dasharray:none;}
+    .reveal{transition:none;opacity:1;transform:none;}
+    .btn:hover, .skill-card:hover{transform:none;}
+    .hero-content > *, .photo-tag{animation:none;opacity:1;}
+    .tl-item.active::before, .photo-tag::before{animation:none;}
+    .project:hover h3{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     PROFILE PHOTO — replace the src below with your own image.
+     Can be a local file next to this HTML ("photo.jpg") or a full URL.
+     ============================================================ -->
+<div class="fixed-photo">
+  <img id="heroImg" src="My_image_2.jpeg" alt="Chinmay P Waghmare">
+  <div class="photo-tag mono">● available for opportunities</div>
+</div>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">CPW<span>.</span></div>
+    <ul class="navlinks" id="navlinks">
+      <li><a href="#about">about</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#education">education</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+    <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="hero-content">
+      <div class="eyebrow">aspiring software engineer</div>
+      <h1>Chinmay P<br><em>Waghmare</em></h1>
+      <p class="lede">Software engineering student building a foundation in machine learning, database systems, and computer networks — focused on writing reliable, well-architected code and learning fast in collaborative teams.</p>
+      <div class="cta-row">
+        <a href="#projects" class="btn btn-primary">View Projects →</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+      </div>
+    </div>
+    <div class="signal-strip" aria-hidden="true">
+      <svg viewBox="0 0 1000 64" preserveAspectRatio="none">
+        <path class="signal-path" d="M0,32 L120,32 L140,10 L160,54 L180,32 L260,32 L280,18 L300,46 L320,32 L420,32 L440,4 L460,60 L480,32 L620,32 L640,16 L660,48 L680,32 L780,32 L800,10 L820,54 L840,32 L1000,32"/>
+      </svg>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">about</div><h2>A bit about me</h2></div></div>
+      <div class="about-grid">
+        <div>
+          <p>I'm currently pursuing a Master of Computer Applications at KLE Technological University, Hubli, following a Bachelor's in Computer Science &amp; Electronics from KLE's P C Jabin Science College. My focus areas are machine learning, database management systems, and computer networks.</p>
+          <p>I like turning data into working systems — the projects below are small in scale but reflect how I think: pick a real prediction problem, build a clean pipeline, and get it working end to end. I'm looking for opportunities where I can keep doing that at a larger scale, alongside people I can learn from.</p>
+        </div>
+        <div class="lang-card reveal">
+          <h3>languages</h3>
+          <div class="lang-list">
+            <span class="pill">English</span>
+            <span class="pill">Kannada</span>
+            <span class="pill">Hindi</span>
+            <span class="pill">Marathi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">skills</div><h2>Core areas</h2></div></div>
+      <div class="skills-grid">
+        <div class="skill-card reveal">
+          <span class="tag">01</span>
+          <h3>Machine Learning</h3>
+          <p>Building and evaluating predictive models — from data prep to a working end-to-end pipeline.</p>
+        </div>
+        <div class="skill-card reveal">
+          <span class="tag">02</span>
+          <h3>DBMS</h3>
+          <p>Database design, querying, and management for structured application data.</p>
+        </div>
+        <div class="skill-card reveal">
+          <span class="tag">03</span>
+          <h3>Computer Networks</h3>
+          <p>Core networking concepts underpinning how distributed systems communicate.</p>
+        </div>
+        <div class="skill-card reveal">
+          <span class="tag">04</span>
+          <h3>Python</h3>
+          <p>Primary language for data work and scripting — certified via Udemy's Python Programming course.</p>
+        </div>
+        <div class="skill-card reveal">
+          <span class="tag">05</span>
+          <h3>Software Engineering Practices</h3>
+          <p>Grounded in algorithms and engineering fundamentals for reliable, maintainable code.</p>
+        </div>
+        <div class="skill-card reveal">
+          <span class="tag">06</span>
+          <h3>Collaboration</h3>
+          <p>Comfortable working in team environments, communicating across English, Hindi, Kannada &amp; Marathi.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">projects</div><h2>Selected work</h2></div></div>
+      <div class="project-list">
+        <div class="project reveal">
+          <div class="idx mono">P1</div>
+          <div>
+            <h3>Movie Recommendation System</h3>
+            <p>A recommendation engine that suggests films to users based on similarity in ratings and content, built to explore collaborative and content-based filtering approaches.</p>
+            <div class="stack-row"><span class="pill">Machine Learning</span><span class="pill">Python</span></div>
+          </div>
+        </div>
+        <div class="project reveal">
+          <div class="idx mono">P2</div>
+          <div>
+            <h3>Loan Prediction System</h3>
+            <p>A classification model that predicts loan approval likelihood from applicant data, covering data cleaning, feature selection, and model evaluation.</p>
+            <div class="stack-row"><span class="pill">Machine Learning</span><span class="pill">DBMS</span></div>
+          </div>
+        </div>
+        <div class="project reveal">
+          <div class="idx mono">P3</div>
+          <div>
+            <h3>Predictive e-Horizon System <span style="color:var(--text-muted);font-weight:400;font-size:0.85rem;">— Mini Project</span></h3>
+            <p>A mini project exploring predictive modelling for forward-looking, data-driven insights within a defined system scope.</p>
+            <div class="stack-row"><span class="pill">Machine Learning</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="wrap">
+      <div class="section-head"><div><div class="eyebrow">education</div><h2>Academic background</h2></div></div>
+      <div class="timeline">
+        <div class="tl-item reveal active">
+          <span class="status mono">in progress</span>
+          <h3>Master of Computer Applications (MCA)</h3>
+          <p>KLE Technological University, Hubli</p>
+        </div>
+        <div class="tl-item reveal">
+          <span class="status mono">completed</span>
+          <h3>B.Sc. Computer Science &amp; Electronics</h3>
+          <p>KLE's P C Jabin Science College</p>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin-top:64px;"><div><div class="eyebrow">certificates</div><h2>Certifications</h2></div></div>
+      <div class="cert-grid">
+        <div class="cert-card reveal">
+          <h3>Python Programming</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;">Udemy</p>
+        </div>
+        <div class="cert-card reveal">
+          <h3>Google Skills Certificate</h3>
+          <a href="https://www.skills.google/public_profiles/f79de4cc-060f-423a-b8f8-b00450466768" target="_blank" rel="noopener">view credential →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="contact-box reveal">
+        <div class="eyebrow" style="justify-content:center;">contact</div>
+        <h2>Let's talk.</h2>
+        <p>Open to internships, entry-level roles, and collaborations. Reach out any time.</p>
+        <div class="contact-links">
+          <a class="btn btn-primary" href="mailto:chinmaypw7771@gmail.com">Email me</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/chinmay-waghmare-299277342" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn btn-ghost" href="https://github.com/Chinmaypw-0" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn btn-ghost" href="https://drive.google.com/file/d/1_g69p_mXpsAdq27QIpDxiz1zRy20FzDl/view?usp=sharing" target="_blank" rel="noopener">DAA Document</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 Chinmay P Waghmare — built line by line, not templated.</p>
+</footer>
+
+<script>
+  const menuBtn = document.getElementById('menuBtn');
+  const navlinks = document.getElementById('navlinks');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = navlinks.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navlinks.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', 'false');
+  }));
+
+  // Blur + darken the fixed hero photo progressively as the page scrolls,
+  // so the text appears to overlap/emerge in front of it while it goes out of focus.
+  const heroImg = document.getElementById('heroImg');
+  const MAX_BLUR = 14;      // px, at full scroll-through of the hero
+  const SCROLL_RANGE = window.innerHeight; // how much scroll it takes to reach max blur
+  let ticking = false;
+
+  function updatePhotoBlur() {
+    const progress = Math.min(window.scrollY / SCROLL_RANGE, 1); // 0 -> 1
+    const blur = (progress * MAX_BLUR).toFixed(2);
+    const brightness = (0.9 - progress * 0.25).toFixed(2);
+    if (heroImg) {
+      heroImg.style.filter = `grayscale(20%) contrast(1.05) brightness(${brightness}) blur(${blur}px)`;
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(updatePhotoBlur);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  updatePhotoBlur();
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Stagger reveal timing for elements that sit in the same group (skills, projects, certs, timeline)
+  document.querySelectorAll('.skills-grid, .project-list, .cert-grid, .timeline').forEach(group => {
+    group.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = prefersReducedMotion ? '0s' : `${i * 80}ms`;
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('in');
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
